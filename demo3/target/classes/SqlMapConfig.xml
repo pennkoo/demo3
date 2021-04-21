@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--读取属性文件-->
+    <properties resource="jdbc.properties"/>
+
+    <!-- 定义别名 -->
+    <typeAliases>
+        <!-- 把cn.tx.domain.User使用user别名来显示，别名user User USER都可以，默认是忽略大写的
+        <typeAlias type="cn.tx.domain.User" alias="user"/>
+        -->
+        <!-- 针对cn.tx.domain包下的所有的类，都可以使用当前的类名做为别名 -->
+        <package name="cn.tx.domain"/>
+    </typeAliases>
+
+    <!-- 配置环境们 -->
+    <environments default="mysql">
+        <!-- 配置具体的环境 -->
+        <environment id="mysql">
+            <!--
+            配置事务管理类型，使用本地事务策略
+            使用mysql数据库，事务管理方式
+                1、手动提交事务/回滚事务，setAutoCommit(false),mybatis默认事务管理的方式
+                2、自动提交事务（mybatis可以设置，不推荐使用）
+
+             -->
+            <transactionManager type="JDBC"/>
+            <!--
+            是否使用连接池，内置的连接池
+            type=""取值有3个写法
+            POOLED  使用内置连接池，对应类PooledDataSource
+            UNPOOLED  不使用连接池，底层创建连接的方式,UnpooledDataSource
+            JNDI  使用JNDI方式使用连接池
+
+            -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 加载映射的配置文件 -->
+    <mappers>
+        <mapper resource="mappers/UserMapper.xml"/>
+        <mapper resource="mappers/AccountMapper.xml"/>
+    </mappers>
+</configuration>

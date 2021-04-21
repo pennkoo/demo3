@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.tx.mapper.UserMapper">
+    <!--定义公共SQL语句-->
+    <sql id="findAllSql">
+        select * from user
+    </sql>
+
+    <!--通过主键查询-->
+    <select id="findUserById" parameterType="java.lang.Integer" resultType="cn.tx.domain.User">
+        select * from user where id = #{id}
+    </select>
+
+    <!--删除-->
+    <delete id="delete" parameterType="int">
+        delete from user where id = #{id}
+    </delete>
+
+    <!--测试If标签-->
+    <!--<select id="findByIf" parameterType="user" resultType="user">
+        select * from user where 1=1
+        <if test="username != null and username != ''">
+            and username like #{username}
+        </if>
+        <if test="sex != null and sex != ''">
+            and sex = #{sex}
+        </if>
+    </select>-->
+
+    <!--where标签，给SQL语句拼接where关键字-->
+    <select id="findByIf" parameterType="user" resultType="user">
+        <include refid="findAllSql"/>
+        <where>
+            <if test="username != null and username != ''">
+                and username like #{username}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+        </where>
+    </select>
+
+    <!--测试foreach标签
+    <foreach collection="要遍历的集合" open="开始" close="结束" separator="切割符号" index="下标" item="遍历后变量"></foreach>
+    -->
+    <!--<select id="findByForeach" parameterType="user" resultType="user">
+        <include refid="findAllSql"/>
+        <where>
+            <foreach collection="ids" open="id =" separator="or id=" item="i">
+                #{i}
+            </foreach>
+        </where>
+    </select>-->
+
+    <select id="findByForeach" parameterType="user" resultType="user">
+        <include refid="findAllSql"/>
+        <where>
+            <foreach collection="ids" open="id in (" close=")" separator="," item="i">
+                #{i}
+            </foreach>
+        </where>
+    </select>
+
+    <!--一对多查询-->
+    <select id="findAll" resultMap="userMap">
+        select u.*,a.id aid,a.uid,a.money from user u,account a where u.id = a.uid
+    </select>
+
+    <resultMap id="userMap" type="user">
+        <result property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+
+        <collection property="accounts" ofType="Account">
+            <result property="id" column="aid"/>
+            <result property="uid" column="uid"/>
+            <result property="money" column="money"/>
+        </collection>
+    </resultMap>
+</mapper>
