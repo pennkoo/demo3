@@ -101,7 +101,7 @@ public class Demo1 {
     }
 
     /**
-     * 一对多查询
+     * 测试一对多查询
      */
     @Test
     public void testFindAll(){
