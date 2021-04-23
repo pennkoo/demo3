@@ -48,5 +48,6 @@
     <mappers>
         <mapper resource="mappers/UserMapper.xml"/>
         <mapper resource="mappers/AccountMapper.xml"/>
+        <mapper resource="mappers/RoleMapper.xml"/>
     </mappers>
 </configuration>
